@@ -72,6 +72,7 @@ func (p *ScaffoldingProvider) Resources(ctx context.Context) []func() resource.R
 
 func (p *ScaffoldingProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewESBuildBundleDataSource,
 		NewExampleDataSource,
 	}
 }
