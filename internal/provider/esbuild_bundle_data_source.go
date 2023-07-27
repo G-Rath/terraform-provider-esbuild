@@ -24,11 +24,12 @@ type ESBuildBundleDataSource struct {
 
 // ESBuildBundleDataSourceModel describes the data source data model.
 type ESBuildBundleDataSourceModel struct {
-	Id       types.String `tfsdk:"id"`
-	Filename types.String `tfsdk:"filename"`
-	Platform types.String `tfsdk:"platform"`
-	Target   types.String `tfsdk:"target"`
-	Content  types.String `tfsdk:"content"`
+	Id            types.String `tfsdk:"id"`
+	Filename      types.String `tfsdk:"filename"`
+	Platform      types.String `tfsdk:"platform"`
+	Target        types.String `tfsdk:"target"`
+	Content       types.String `tfsdk:"content"`
+	SourceMapMode types.String `tfsdk:"sourcemap"`
 }
 
 func (d *ESBuildBundleDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -58,6 +59,11 @@ func (d *ESBuildBundleDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, 
 			},
 			"platform": {
 				MarkdownDescription: "The platform to compile the JavaScript code for",
+				Type:                types.StringType,
+				Optional:            true,
+			},
+			"sourcemap": {
+				MarkdownDescription: "The sourcemap generation setting",
 				Type:                types.StringType,
 				Optional:            true,
 			},
@@ -114,6 +120,26 @@ func (d *ESBuildBundleDataSourceModel) getPlatform() (api.Platform, string, erro
 	return api.PlatformDefault, "default", fmt.Errorf(`unknown platform "%s"`, d.Platform.Value)
 }
 
+func (d *ESBuildBundleDataSourceModel) getSourceMapMode() (api.SourceMap, string, error) {
+	if d.SourceMapMode.IsNull() {
+		return api.SourceMapNone, "none", nil
+	}
+
+	validModes := map[string]api.SourceMap{
+		"none":     api.SourceMapNone,
+		"inline":   api.SourceMapInline,
+		"linked":   api.SourceMapLinked,
+		"external": api.SourceMapExternal,
+		"both":     api.SourceMapInlineAndExternal,
+	}
+
+	if mode, ok := validModes[d.SourceMapMode.Value]; ok {
+		return mode, d.SourceMapMode.Value, nil
+	}
+
+	return api.SourceMapNone, "none", fmt.Errorf(`unknown sourcemap mode "%s"`, d.SourceMapMode.Value)
+}
+
 func (d *ESBuildBundleDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
@@ -156,6 +182,7 @@ func (d *ESBuildBundleDataSource) Read(ctx context.Context, req datasource.ReadR
 		Bundle:      true,
 		Platform:    platform,
 		Target:      target,
+		Sourcemap:   api.SourceMapInline,
 	})
 
 	if len(result.Warnings) > 0 {
