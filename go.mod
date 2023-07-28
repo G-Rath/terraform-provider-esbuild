@@ -3,11 +3,10 @@ module github.com/g-rath/terraform-provider-esbuild
 go 1.19
 
 require (
-	github.com/evanw/esbuild v0.17.11
+	github.com/evanw/esbuild v0.18.17
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-framework v0.13.0
 	github.com/hashicorp/terraform-plugin-go v0.18.0
-	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.25.0
 )
 
@@ -37,6 +36,7 @@ require (
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.17.3 // indirect
 	github.com/hashicorp/terraform-json v0.15.0 // indirect
+	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/hashicorp/terraform-registry-address v0.2.1 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
