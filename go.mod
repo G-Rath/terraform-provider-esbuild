@@ -3,7 +3,7 @@ module github.com/g-rath/terraform-provider-esbuild
 go 1.19
 
 require (
-	github.com/evanw/esbuild v0.18.17
+	github.com/evanw/esbuild v0.19.5
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-framework v0.13.0
 	github.com/hashicorp/terraform-plugin-go v0.18.0
